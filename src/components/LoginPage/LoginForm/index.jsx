@@ -12,7 +12,7 @@ const LoginForm = () => {
             </div>
             <div>
                 
-                {logInText ? <SignIn /> : <SignUp />}
+                {logInText ? <SignIn /> : <SignUp setLoginText={setLoginText} />}
                 <div className="my-4">
                     {logInText ? <div onClick={() => {
                         setLoginText(false)

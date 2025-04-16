@@ -56,7 +56,7 @@ const SignIn = () => {
       <div className="w-full mb-4">
         <Button
           variant="contained"
-          className="rounded !w-full !py-2 !text-[16px] !font-medium"
+          className="rounded !w-full !py-2 !text-[16px] !text-white !font-medium !bg-blue-600"
           onClick={formik.handleSubmit}
         >
           Sign In

@@ -1,16 +1,11 @@
 import axios from 'axios';
 
-const baseURLs = {
-  auth: import.meta.env.VITE_AUTH_BASE_URL,
-  user: import.meta.env.VITE_USER_BASE_URL,
-  task: import.meta.env.VITE_TASK_BASE_URL,
-};
-
 const api = axios.create({
-  baseURL: baseURLs.user,
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Set your base URL once
+  withCredentials: true, // Only needed if you're using cookies/sessions
 });
 
+// Attach Authorization token if present
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -18,22 +13,20 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    const service = config.meta?.service;
-    if (service && baseURLs[service]) {
-      config.baseURL = baseURLs[service];
-    }
-
     return config;
   },
   (error) => Promise.reject(error)
 );
 
+// Handle global response errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       console.warn('Unauthorized, redirecting to login...');
+      // optionally: redirect to login here
     }
+
     return Promise.reject(error);
   }
 );

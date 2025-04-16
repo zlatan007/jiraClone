@@ -9,7 +9,7 @@ const AppRouter = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={isAuthentication ? <Navigate to="/taskList" replace /> : <LoginPage />} />
+        <Route path="/" element={isAuthentication ? <Navigate to="/tasklist" replace /> : <LoginPage />} />
         {routeConfig.map(({ path, component, isProtectedRoute, isLayoutNeeded }, index) => (
           <Route
             key={index}

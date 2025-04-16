@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { signUp } from "../../../../services/LoginService";
 import { useMutation } from "@tanstack/react-query";
 
-const SignUp = () => {
+const SignUp = ({setLoginText}) => {
 
     const formik = useFormik({
         initialValues: initialValues(),
@@ -14,25 +14,27 @@ const SignUp = () => {
             mutate({
                 email: val?.emailId,
                 password: val?.password,
-                firstname: val?.firstName,
-                lastname: val?.lastName
+                firstName: val?.firstName,
+                lastName: val?.lastName
             })
         }
     });
 
-    
-        const {
-            mutate,
-            isLoading,
-        } = useMutation({
-            mutationFn: signUp,
-            onSuccess: (data) => {
-                console.log('✅ Signup success:', data);
-            },
-            onError: (err) => {
-                console.error('Signup failed:', err);
-            },
-        });
+
+    const {
+        mutate,
+        isLoading,
+    } = useMutation({
+        mutationFn: signUp,
+        onSuccess: (data) => {
+            if(data?.success) {
+                setLoginText(true);
+            }
+        },
+        onError: (err) => {
+            console.error('Signup failed:', err);
+        },
+    });
 
     return (
         <div>
@@ -115,7 +117,7 @@ const SignUp = () => {
             <div className="w-full mb-4">
                 <Button
                     variant="contained"
-                    className="rounded !w-full !py-2 !text-[16px] !font-medium"
+                    className="rounded !w-full !py-2 !text-[16px] !text-white !font-medium !bg-blue-600"
                     onClick={formik.handleSubmit}
                 >
                     Sign Up

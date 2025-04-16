@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 const sidebarData = [
     {
       name: "Tasklist",
-      path: "/taskList",
+      path: "/tasklist",
       // children: [
       //   { name: "Overview", path: "/dashboard/overview" },
       //   { name: "Stats", path: "/dashboard/stats" },
