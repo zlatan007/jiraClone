@@ -1,8 +1,14 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+
+  const userDetails = useSelector((state) => state.authUserDetails);
+
+  console.log("userDetails", userDetails);
+
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

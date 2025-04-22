@@ -4,6 +4,7 @@ import { initialValues, validationSchema } from "../../../../helpers/SignUp";
 import { Button } from "@mui/material";
 import { signUp } from "../../../../services/LoginService";
 import { useMutation } from "@tanstack/react-query";
+import CustomLoader from "../../../Shared/CustomLoader";
 
 const SignUp = ({setLoginText}) => {
 
@@ -27,6 +28,7 @@ const SignUp = ({setLoginText}) => {
     } = useMutation({
         mutationFn: signUp,
         onSuccess: (data) => {
+            console.log("31", data)
             if(data?.success) {
                 setLoginText(true);
             }
@@ -36,8 +38,11 @@ const SignUp = ({setLoginText}) => {
         },
     });
 
+    console.log("isLoading", isLoading)
+
     return (
         <div>
+            <CustomLoader open={isLoading} />
             <div className="mb-4">
                 <CustomTextField
                     name="firstName"

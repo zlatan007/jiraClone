@@ -2,19 +2,53 @@ import { useFormik } from "formik";
 import CustomTextField from "../../../Shared/CustomTextField";
 import { Button } from "@mui/material";
 import { initialValues, validationSchema } from "../../../../helpers/SignIn";
+import { useMutation } from "@tanstack/react-query";
+import { signIn } from "../../../../services/LoginService";
+import CustomLoader from "../../../Shared/CustomLoader";
+import { useDispatch } from "react-redux";
+import { checkIsAuthenticated, saveUserDetails } from "../../../../redux/Slices/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: validationSchema(),
     onSubmit: (val) => {
-      console.log("val", val);
+      mutate({
+        email: val?.emailId,
+        password: val?.password,
+      })
     }
+  });
+
+  const {
+    mutate,
+    isLoading,
+  } = useMutation({
+    mutationFn: signIn,
+    onSuccess: (data) => {
+      console.log("28", data);
+      if (data?.success) {
+        const {token, ...details} = data?.userDetails;
+        localStorage.setItem("token", data?.userDetails?.token);
+        localStorage.setItem("userDetails", JSON.stringify(details));
+        dispatch(saveUserDetails(JSON.parse(localStorage.getItem("userDetails"))));
+        dispatch(checkIsAuthenticated(true));
+        navigate("/tasklist");
+      }
+    },
+    onError: (err) => {
+      console.error('Signup failed:', err);
+    },
   });
 
   return (
     <div>
+      <CustomLoader open={isLoading} />
       <div className="mb-4">
         <CustomTextField
           name="emailId"
