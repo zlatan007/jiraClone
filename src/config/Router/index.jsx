@@ -3,15 +3,14 @@ import LoginPage from "../../pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import { routeConfig } from "../../helpers/Route";
 import Layout from "../../components/Shared/Layout";
-import { useSelector } from "react-redux";
 
 const AppRouter = () => {
-  const isAuthenticated = useSelector((state) => state.authUserDetails.isAuthenticated);
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/tasklist" replace /> : <LoginPage />} />
+        <Route index element={isAuthenticated ? <Navigate to="/tasklist" replace /> : <LoginPage />} />
         {routeConfig.map(({ path, component, isProtectedRoute, isLayoutNeeded }, index) => (
           <Route
             key={index}
@@ -22,7 +21,7 @@ const AppRouter = () => {
                   {isLayoutNeeded ? <Layout>{component}</Layout> : <>{component}</>}
                 </ProtectedRoute>
               ) : (
-                <Route to="/" element={<LoginPage />} />
+                component
               )
             }
           />

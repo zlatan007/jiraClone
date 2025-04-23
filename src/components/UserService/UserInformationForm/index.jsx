@@ -3,23 +3,54 @@ import { useFormik } from "formik";
 import { initialValues, validationSchema } from "../../../helpers/UserService/UserInformationForm";
 import CustomTextField from "../../Shared/CustomTextField";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUserDetails } from "../../../services/UserService";
+import CustomLoader from "../../Shared/CustomLoader";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 const UserInformationForm = () => {
-
     const [isEdit, setIsEdit] = useState(false);
+    const [formData, setFormData] = useState();
+
+    const id = useSelector((state) => state.authUserDetails.userDetails.id);
 
     const formik = useFormik({
-        initialValues: initialValues(),
+        initialValues: initialValues(formData),
         validationSchema: validationSchema(),
+        enableReinitialize: true,
         onSubmit: (val) => {
             setIsEdit(false);
         }
     });
 
+    console.log("formik", formik.values)
+
+    const { isLoading, data } = useQuery({
+        queryKey: ["userDetails", id],
+        queryFn: async () => {
+            const res = await getUserDetails(id);
+            //   console.log("🔥 API returned:", res);
+            return res;
+        },
+        enabled: !!id,
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
+
+    useEffect(() => {
+        console.log("data", data)
+        if (data?.success) {
+            setFormData(data?.data);
+        }
+    }, [data]);
+
+    if (isLoading) {
+        return <CustomLoader open={true} />
+    }
+
     return (
         <div className="mx-6">
-
             <div className="text-[32px] mb-8 text-center font-semibold">
                 User Information
             </div>
@@ -81,7 +112,7 @@ const UserInformationForm = () => {
                     />
                 </div>
 
-                <div className="mb-4">
+                {/* <div className="mb-4">
                     <CustomTextField
                         name="password"
                         label="Password"
@@ -98,24 +129,39 @@ const UserInformationForm = () => {
                         inputClassName="!p-0"
                         rootClassName="!p-0"
                     />
-                </div>
+                </div> */}
             </div>
 
-            <div className="w-32 mb-4 mt-8 mx-auto">
-                <Button
-                    variant="contained"
-                    className="rounded !w-full !py-2 !text-[16px] !font-medium"
-                    onClick={() => {
-                        if (isEdit) {
-                            formik.handleSubmit();
-                        } else {
-                            setIsEdit(true);
-                        }
-                    }}
-                >
-                    {isEdit ? "Save" : "Edit"}
-                </Button>
+            <div className="flex space-x-4 justify-center my-4">
+                <div className="w-32">
+                    <Button
+                        variant="contained"
+                        className="rounded !w-full !py-2 !text-[16px] !font-medium"
+                        onClick={() => {
+                            if (isEdit) {
+                                formik.handleSubmit();
+                            } else {
+                                setIsEdit(true);
+                            }
+                        }}
+                    >
+                        {isEdit ? "Save" : "Edit"}
+                    </Button>
+                </div>
+
+                {isEdit && <div className="w-32">
+                    <Button
+                        variant="contained"
+                        className="rounded !w-full !py-2 !text-[16px] !font-medium"
+                        onClick={() => {
+                            setIsEdit(false);
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                </div>}
             </div>
+
         </div>
 
     )

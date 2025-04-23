@@ -10,7 +10,7 @@ export const routeConfig = [{
 },
 {
     component: <UserInformation />,
-    path: "/userinformation/:id",
+    path: "/userinformation",
     isProtectedRoute: true,
     isLayoutNeeded: true,
 },

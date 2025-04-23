@@ -1,11 +1,12 @@
 import * as yup from "yup";
 
 export const initialValues = (data) => {
+  console.log("data", data)
     return {
         firstName: data?.firstName || "",
         lastName: data?.lastName || "",
-        emailId: data?.emailId || "",
-        password: data?.password || ""
+        emailId: data?.email || "",
+        // password: data?.password || ""
     }
 }
 
@@ -22,9 +23,9 @@ export const validationSchema = () => {
         .string()
         .email("Invalid email format")
         .required("Email is required"),
-      password: yup
-        .string()
-        .required("Password is required")
-        .min(6, "Password must be at least 6 characters"),
+      // password: yup
+      //   .string()
+      //   .required("Password is required")
+      //   .min(6, "Password must be at least 6 characters"),
     });
 }

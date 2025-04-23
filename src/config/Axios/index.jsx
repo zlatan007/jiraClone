@@ -12,7 +12,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   },
   (error) => Promise.reject(error)
@@ -24,7 +23,15 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.warn('Unauthorized, redirecting to login...');
-      // optionally: redirect to login here
+      // Optionally redirect to login page
+      window.location.href = '/login'; // Adjust this as per your routing setup
+    }
+    
+    // Log other errors (e.g., 500, 404) for debugging
+    if (error.response) {
+      console.error(`API error: ${error.response.status} - ${error.response.data}`);
+    } else {
+      console.error("API request failed:", error.message);
     }
 
     return Promise.reject(error);

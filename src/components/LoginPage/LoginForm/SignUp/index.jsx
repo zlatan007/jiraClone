@@ -28,7 +28,6 @@ const SignUp = ({setLoginText}) => {
     } = useMutation({
         mutationFn: signUp,
         onSuccess: (data) => {
-            console.log("31", data)
             if(data?.success) {
                 setLoginText(true);
             }
@@ -37,8 +36,6 @@ const SignUp = ({setLoginText}) => {
             console.error('Signup failed:', err);
         },
     });
-
-    console.log("isLoading", isLoading)
 
     return (
         <div>

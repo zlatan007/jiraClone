@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signIn } from "../../../../services/LoginService";
 import CustomLoader from "../../../Shared/CustomLoader";
 import { useDispatch } from "react-redux";
-import { checkIsAuthenticated, saveUserDetails } from "../../../../redux/Slices/AuthSlice";
+import { saveUserDetails } from "../../../../redux/Slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
@@ -31,13 +31,11 @@ const SignIn = () => {
   } = useMutation({
     mutationFn: signIn,
     onSuccess: (data) => {
-      console.log("28", data);
       if (data?.success) {
         const {token, ...details} = data?.userDetails;
         localStorage.setItem("token", data?.userDetails?.token);
         localStorage.setItem("userDetails", JSON.stringify(details));
         dispatch(saveUserDetails(JSON.parse(localStorage.getItem("userDetails"))));
-        dispatch(checkIsAuthenticated(true));
         navigate("/tasklist");
       }
     },
